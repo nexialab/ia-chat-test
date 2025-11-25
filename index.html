@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+   
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Chat" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#1cc08d" />
+    <meta name="msapplication-TileColor" content="#1cc08d" />
+    
+  
+    <meta name="description" content="Chat inteligente com suporte a mensagens, áudio e imagens" />
+    <meta name="keywords" content="chat, mensagens, ia, assistente" />
+    
+ 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    
+    <title>Chat</title>
+    
+    
+    <link rel="manifest" href="/manifest.json" />
+    
+ 
+    <link rel="apple-touch-icon" href="/public/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/public/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/public/icon-512.png" />
+    
+   
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="./styles.css">
+   
+</head>
+
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">
+                Carregando chat
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="loading-subtext">Preparando sua experiência</div>
+        </div>
+    </div>
+
+    <div class="error-screen" id="errorScreen">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="error-title">Configuração Incompleta</h2>
+            <p class="error-message">
+                Não foi possível inicializar o chat. Algumas credenciais necessárias estão faltando.
+            </p>
+            
+            <div class="error-details">
+                <div class="error-details-title">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Credenciais ausentes:</span>
+                </div>
+                <ul class="error-list" id="errorList"></ul>
+            </div>
+
+            <div class="error-actions">
+                <button class="error-btn error-btn-secondary" onclick="retryConnection()">
+                    <i class="fas fa-redo"></i>
+                    Tentar novamente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <div class="header-left">
+                <h2 id="chatTitleInput">Chat</h2>
+                <div id="sessionInfo" class="session-info"></div>
+            </div>
+            <div class="header-right">
+                <div class="status">
+                    <div class="status-dot"></div>
+                    <span>Online</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="messages" id="messages"></div>
+
+        <div class="input-container" id="inputContainer">
+            <div class="input-wrapper">
+                <div class="input-actions-left">
+                    <button class="btn-icon btn-secondary" id="fileBtn" title="Enviar arquivo" aria-label="Enviar arquivo" style="display: none;">
+                        <i class="fas fa-paperclip" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn-icon btn-secondary" id="audioBtn" title="Gravar áudio" aria-label="Gravar áudio" style="display: none;">
+                        <i class="fas fa-microphone" aria-hidden="true"></i>
+                    </button>
+                </div>
+                
+                <textarea 
+                    id="messageInput" 
+                    placeholder="Digite sua mensagem..." 
+                    rows="1"
+                    enterkeyhint="send"
+                    aria-label="Campo de mensagem"
+                    autocomplete="off"
+                    autocorrect="on"
+                    autocapitalize="sentences"
+                    spellcheck="true"
+                ></textarea>
+                
+                <button class="btn-icon btn-primary" id="sendButton" title="Enviar mensagem" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept="image/*" />
+    <input type="file" id="audioInput" accept="audio/*" />
+   
+    <script type="module" src="./main.js"></script>
+    <script type="module">
+        window.initializeChat({
+            supabaseUrl: "https://dksldjlskdj.supabase.co",
+            supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+            webhookUrl: "https://webhook.teste.com/webhook/chat-diario",
+            tableName: "n8n_test",
+            chatTitle: "TESTE AI",
+            enableAudioRecording: false,
+            enableFileUpload: false,
+        });
+    </script>
+
+ 
+    <script>
+        // Registra o Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registrado:', registration.scope);
+                        
+                        // Verifica atualizações
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🔄 Nova versão disponível!');
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('❌ Falha ao registrar Service Worker:', error);
+                    });
+            });
+        }
+
+        // Install prompt para PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 App pode ser instalado');
+            
+            // Você pode mostrar um botão customizado aqui para instalar o app
+            // Por exemplo: mostrar um banner "Instalar App"
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ App instalado com sucesso!');
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+</html>
+
+ 

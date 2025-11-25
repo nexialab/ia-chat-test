@@ -99,14 +99,14 @@ window.initializeChat = (credentials = {}) => {
     if (!config.tableName) missing.push("tableName");
   } else {
     // 🔹 Se não for usar Supabase, só precisa do webhook
-    if (!config.webhookUrl) missing.push("webhookUrl");
+    // if (!config.webhookUrl) missing.push("webhookUrl");
   }
 
-  if (missing.length > 0) {
-    console.error("Credenciais faltando:", missing);
-    showErrorScreen(missing);
-    return false;
-  }
+  // if (missing.length > 0) {
+  //   console.error("Credenciais faltando:", missing);
+  //   showErrorScreen(missing);
+  //   return false;
+  // }
 
   // 🔹 Caso tudo esteja ok
   hideErrorScreen();

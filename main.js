@@ -99,14 +99,14 @@ window.initializeChat = (credentials = {}) => {
     if (!config.tableName) missing.push("tableName");
   } else {
     // 🔹 Se não for usar Supabase, só precisa do webhook
-    // if (!config.webhookUrl) missing.push("webhookUrl");
+    if (!config.webhookUrl) missing.push("webhookUrl");
   }
 
-  // if (missing.length > 0) {
-  //   console.error("Credenciais faltando:", missing);
-  //   showErrorScreen(missing);
-  //   return false;
-  // }
+  if (missing.length > 0) {
+    console.error("Credenciais faltando:", missing);
+    showErrorScreen(missing);
+    return false;
+  }
 
   // 🔹 Caso tudo esteja ok
   hideErrorScreen();
@@ -218,7 +218,7 @@ function initSupabase() {
 function loadConfig() {
   // if (!config.supabaseUrl || !config.supabaseKey) return;
 
-  updateUIConfig();
+  // updateUIConfig();
   updateChatTitle();
   updateButtonsVisibility(); // Atualiza botões
 
@@ -236,13 +236,13 @@ function loadConfig() {
   }
 }
 
-function updateUIConfig() {
-  document.getElementById("supabaseUrl").value = config.supabaseUrl || "";
-  document.getElementById("supabaseKey").value = config.supabaseKey || "";
-  document.getElementById("webhookUrl").value = config.webhookUrl || "";
-  document.getElementById("tableName").value = config.tableName || "";
-  document.getElementById("chatTitleInput").value = config?.chatTitle || "";
-}
+// function updateUIConfig() {
+//   document.getElementById("supabaseUrl").value = config.supabaseUrl || "";
+//   document.getElementById("supabaseKey").value = config.supabaseKey || "";
+//   document.getElementById("webhookUrl").value = config.webhookUrl || "";
+//   document.getElementById("tableName").value = config.tableName || "";
+//   document.getElementById("chatTitleInput").value = config?.chatTitle || "";
+// }
 
 function saveConfig() {
   updateChatTitle();
@@ -673,7 +673,7 @@ inputEl.addEventListener("keydown", (e) => {
 });
 
 // Auto-resize com debounce
-inputEl.addEventListener("input", debounce(autoResizeTextarea, 50));
+// inputEl.addEventListener("input", debounce(autoResizeTextarea, 50));
 
 // Limpar altura quando enviar mensagem
 const originalSendMessage = sendMessage;
